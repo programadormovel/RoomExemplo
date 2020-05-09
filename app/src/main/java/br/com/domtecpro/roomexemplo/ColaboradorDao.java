@@ -9,14 +9,14 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface PalavraDao {
+public interface ColaboradorDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(Palavra palavra);
+    void insert(Colaborador colaborador);
 
-    @Query("Delete FROM tabela_de_palavras")
+    @Query("Delete FROM Colaborador")
     void deleteAll();
 
-    @Query("Select * FROM tabela_de_palavras ORDER BY palavra ASC")
-    LiveData<List<Palavra>> getPalavrasOrdenadas();
+    @Query("Select * FROM Colaborador ORDER BY id ASC")
+    LiveData<List<Colaborador>> getColaboradoresOrdenados();
 }

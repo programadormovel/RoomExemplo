@@ -1,7 +1,5 @@
 package br.com.domtecpro.roomexemplo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,7 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class NovaPalavraActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class NovoColaboradorActivity extends AppCompatActivity {
 
     //public static final String EXTRA_REPLY = "com.example.android.wordlistsql.REPLY";
     public static final String EXTRA_REPLY = "br.com.domtecpro.roomexemplo.REPLY";

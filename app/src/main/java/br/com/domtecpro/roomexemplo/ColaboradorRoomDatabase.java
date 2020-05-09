@@ -16,22 +16,22 @@ import java.util.concurrent.Executors;
 //      O parâmetro entities define as tabelas do banco de dados
 //      e define o número da versão do banco dados
 //      exportSchema é utilizado para controle de versão do banco de dados
-@Database(entities = {Palavra.class}, version = 1, exportSchema = false)
-public abstract class PalavraRoomDatabase extends RoomDatabase {
+@Database(entities = {Colaborador.class}, version = 1, exportSchema = false)
+public abstract class ColaboradorRoomDatabase extends RoomDatabase {
 
-    public abstract PalavraDao palavraDao();
+    public abstract ColaboradorDao colaboradorDao();
 
-    private static volatile PalavraRoomDatabase INSTANCE;
+    private static volatile ColaboradorRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static PalavraRoomDatabase getDatabase(final Context context) {
+    static ColaboradorRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (PalavraRoomDatabase.class) {
+            synchronized (ColaboradorRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            PalavraRoomDatabase.class, "palavra_database")
+                            ColaboradorRoomDatabase.class, "Colaborador_database")
                             //.addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -40,7 +40,7 @@ public abstract class PalavraRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+    private static Callback sRoomDatabaseCallback = new Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
@@ -50,13 +50,21 @@ public abstract class PalavraRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
-                PalavraDao dao = INSTANCE.palavraDao();
+                ColaboradorDao dao = INSTANCE.colaboradorDao();
                 dao.deleteAll();
 
-                Palavra palavra = new Palavra("Hello");
-                dao.insert(palavra);
-                palavra = new Palavra("World");
-                dao.insert(palavra);
+                Colaborador colaborador = new Colaborador(1, "Adriano",
+                        "Programador", "11111111111",
+                        "Rua Passarinhos, 77",
+                        "programadormovel@gmail.com",
+                        null, null);
+                dao.insert(colaborador);
+                colaborador = new Colaborador(2, "Néia",
+                        "Cachorreira", "11111111111",
+                        "Rua Passarinhos, 77",
+                        "neia@gmail.com",
+                        null, null);
+                dao.insert(colaborador);
             });
         }
     };
