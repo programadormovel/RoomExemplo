@@ -48,10 +48,9 @@ public class ColaboradorListAdapter extends
     public void onBindViewHolder(ColaboradorViewHolder holder, int position) {
         if (mColaboradores != null) {
             Colaborador current = mColaboradores.get(position);
-            //holder.colaboradorItemView.setText(current.getPalavra());
 
             holder.mItem = mColaboradores.get(position);
-            holder.mIdView.setText(mColaboradores.get(position).getId());
+            holder.mIdView.setText(String.valueOf(mColaboradores.get(position).getId()));
             holder.mContentView.setText(mColaboradores.get(position).getNome());
             // included by PM
             holder.mDetailView.setText(mColaboradores.get(position).getCargo());

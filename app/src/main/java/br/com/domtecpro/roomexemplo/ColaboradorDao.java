@@ -17,6 +17,6 @@ public interface ColaboradorDao {
     @Query("Delete FROM Colaborador")
     void deleteAll();
 
-    @Query("Select * FROM Colaborador ORDER BY id ASC")
+    @Query("Select * FROM Colaborador ORDER BY 1 ASC")
     LiveData<List<Colaborador>> getColaboradoresOrdenados();
 }
