@@ -8,6 +8,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,8 +33,8 @@ public abstract class ColaboradorRoomDatabase extends RoomDatabase {
             synchronized (ColaboradorRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            ColaboradorRoomDatabase.class, "Colaborador_database")
-                            //.addCallback(sRoomDatabaseCallback)
+                            ColaboradorRoomDatabase.class, "colaborador_database")
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -50,10 +52,26 @@ public abstract class ColaboradorRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
+                // Banco SQLiteDatabase (interno)
                 ColaboradorDao dao = INSTANCE.colaboradorDao();
-                dao.deleteAll();
 
-                Colaborador colaborador = new Colaborador(1, "Adriano",
+                // Consulta externa ao banco de dados SQL Server
+                List<Colaborador> listaExterna;
+                listaExterna = ColaboradorDaoExterno.pesquisarColaboradoresEx();
+                // Verificar se a lista pesquisada externamente existe, então apaga o banco interno
+                if(listaExterna.size()>0){
+                    // apagando dados internos
+                    dao.deleteAll();
+
+                    // preenchendo dados externos no banco interno
+                    // Trazendo dados do SQL Server para o SQLiteDatabase
+                    for(Colaborador colab : listaExterna){
+                        dao.insert(colab);
+                    }
+                }
+
+                // Simulação de dados locais
+                /*Colaborador colaborador = new Colaborador(1, "Adriano",
                         "Programador", "11111111111",
                         "Rua Passarinhos, 77",
                         "programadormovel@gmail.com",
@@ -64,7 +82,7 @@ public abstract class ColaboradorRoomDatabase extends RoomDatabase {
                         "Rua Passarinhos, 77",
                         "neia@gmail.com",
                         null, null);
-                dao.insert(colaborador);
+                dao.insert(colaborador);*/
             });
         }
     };
