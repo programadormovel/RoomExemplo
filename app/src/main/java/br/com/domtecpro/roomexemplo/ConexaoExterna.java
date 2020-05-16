@@ -6,8 +6,16 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Classe de conexão externa ao SQLServer ou outra base externa desejada
+ */
 public class ConexaoExterna {
+    /**
+     * Método que realiza a conexão através de uma string definida
+     * @return
+     */
     public static Connection conectar(){
+        // Objeto de conexão que será retornado
         Connection conn = null;
 
         try {

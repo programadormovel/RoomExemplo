@@ -21,13 +21,24 @@ import java.util.concurrent.Executors;
 @Database(entities = {Colaborador.class}, version = 1, exportSchema = false)
 public abstract class ColaboradorRoomDatabase extends RoomDatabase {
 
+    // Objeto abstrato de conexão
     public abstract ColaboradorDao colaboradorDao();
-
+    // Objeto volátil criado a partir esta mesma classe
     private static volatile ColaboradorRoomDatabase INSTANCE;
+    // Número de threads disponíveis para o objeto de conexão
     private static final int NUMBER_OF_THREADS = 4;
+    // Objeto que permitirá a execução da conexão no modo assíncrono
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    /** método de obtenção do banco de dados
+     * Cria o banco de dados se ele não existir em tempo de execução (INSTANCE)
+     * O método addCallBack fará a execução do método onOpen() que se encontra
+     * no objeto criado abaixo chamado: sRoomDatabaseCallback
+     * O método build() constrói o banco de dados
+     * @param context
+     * @return
+     */
     static ColaboradorRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (ColaboradorRoomDatabase.class) {
@@ -42,7 +53,9 @@ public abstract class ColaboradorRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    // Objeto estático do tipo Callback
     private static Callback sRoomDatabaseCallback = new Callback() {
+        // Método onOpen realiza a abertura do banco de dados criado
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
@@ -54,7 +67,6 @@ public abstract class ColaboradorRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 // Banco SQLiteDatabase (interno)
                 ColaboradorDao dao = INSTANCE.colaboradorDao();
-
                 // Consulta externa ao banco de dados SQL Server
                 List<Colaborador> listaExterna;
                 listaExterna = ColaboradorDaoExterno.pesquisarColaboradoresEx();

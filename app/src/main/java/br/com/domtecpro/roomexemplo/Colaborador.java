@@ -6,9 +6,17 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ * Classe de Negócio
+ * A assinatura @Entity criará uma tabela correspondente
+ * no SQLiteDatabase (via RoomDatabase)
+ */
 @Entity(tableName = "Colaborador")
 public class Colaborador {
 
+    /**
+     * id (código) chave primária
+     */
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")

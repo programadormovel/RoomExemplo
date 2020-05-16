@@ -2,32 +2,39 @@ package br.com.domtecpro.roomexemplo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
+/**
+ * Adaptador utilizado pelo RecyclerView que carregará os dodos dos colaboradores
+ * Carrega os dados dos itens (cada colaborador) na lista
+ */
 public class ColaboradorListAdapter extends
         RecyclerView.Adapter<ColaboradorListAdapter.ColaboradorViewHolder> {
 
+    /**
+     * Classe ViewHolder
+     * Realiza o de/para - objeto Java (classe)/objeto XML (tela)
+     */
     class ColaboradorViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
-        public final AppCompatTextView mIdView;
-        public final AppCompatTextView mContentView;
+        public final View mView;                        //colaborador
+        public final AppCompatTextView mIdView;         //id colaborador
+        public final AppCompatTextView mContentView;    //nome colaborador
         //included by PM
-        public final AppCompatTextView mDetailView;
-        public final AppCompatImageView mFotoView;
+        public final AppCompatTextView mDetailView;     //cargo colaborador
+        public final AppCompatImageView mFotoView;      //foto colaborador
 
-        public Colaborador mItem;
+        public Colaborador mItem;                       //objeto colaborador (item da lista)
 
 
+        // Método construtor do ViewHolder, realiza o de/para
+        // Realiza o vínculo Tela x Objeto java (item da lista - RecyclerView)
         private ColaboradorViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
@@ -38,18 +45,29 @@ public class ColaboradorListAdapter extends
         }
     }
 
+    // objeto que carrega o item da lista na tela em tempo de execução
     private final LayoutInflater mInflater;
-    private List<Colaborador> mColaboradores; // Cached copy of Colaboradores
+    private List<Colaborador> mColaboradores; // Armazena a cópia dos Colaboradores
+    /**
+     * objeto que receberá a conversão da imagem de bytes para bitmap
+     * e permite o carregamento da imagem no objeto AppCompatImageView da tela
+     */
     public Bitmap mImagemExemplo;
 
+    // Construtor da classe, recebe o contexto atual (tela atual) para carregamento da lista
     ColaboradorListAdapter(Context context) { mInflater = LayoutInflater.from(context); }
 
+    // método que cria e retorna uma visão (View) do item atual, para carregamento na lista
     @Override
     public ColaboradorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.recyclerview_item, parent, false);
         return new ColaboradorViewHolder(itemView);
     }
 
+    /**
+     * método que realiza o vínculo dos dados nos objetos declarados no ViewHolder
+     * Isto é, realiza o carregamento dos dados na tela, em cada item da lista
+     */
     @Override
     public void onBindViewHolder(ColaboradorViewHolder holder, int position) {
         if (mColaboradores != null) {
@@ -65,7 +83,7 @@ public class ColaboradorListAdapter extends
             if(mColaboradores.get(position).getFoto()==null){
                 bitmap = mImagemExemplo;
             }else{
-                bitmap = converterByteToBipmap(mColaboradores.get(position).getFoto());
+                bitmap = Util.converterByteToBipmap(mColaboradores.get(position).getFoto());
             }
 
             if (bitmap != null) {
@@ -78,6 +96,11 @@ public class ColaboradorListAdapter extends
         }
     }
 
+    /**
+     * Método que alimenta a lista de colaboradores do adaptador, vindos do repositório,
+     * através do ViewModel
+     * @param colaboradores
+     */
     void setColaboradores(List<Colaborador> colaboradores){
         mColaboradores = colaboradores;
         notifyDataSetChanged();
@@ -85,7 +108,7 @@ public class ColaboradorListAdapter extends
 
     void setColaboradores(List<Colaborador> colaboradores, byte[] bmp){
         mColaboradores = colaboradores;
-        mImagemExemplo = converterByteToBipmap(bmp);
+        mImagemExemplo = Util.converterByteToBipmap(bmp);
         notifyDataSetChanged();
     }
 
@@ -98,22 +121,5 @@ public class ColaboradorListAdapter extends
         else return 0;
     }
 
-    public Bitmap converterByteToBipmap(byte[] foto) {
-        Bitmap bmp = null;
-        Bitmap bitmapReduzido = null;
-        byte[] x = foto;
-
-        try {
-            bmp = BitmapFactory.decodeByteArray(x, 0, x.length);
-
-            bitmapReduzido = Bitmap.createScaledBitmap(bmp, 1080, 1000, true);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return bitmapReduzido;
-    }
 }
 
