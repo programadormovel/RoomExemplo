@@ -1,8 +1,10 @@
 package br.com.domtecpro.roomexemplo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 /**
@@ -87,17 +90,18 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(MainActivity.this, NovoColaboradorActivity.class);
-                startActivityForResult(intent, NOVA_COLABORADOR_ACTIVITY_REQUEST_CODE);*/
+                Intent intent = new Intent(MainActivity.this, NovoColaboradorActivity.class);
+                startActivityForResult(intent, NOVA_COLABORADOR_ACTIVITY_REQUEST_CODE);
             }
         });
     }
 
-   /* public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NOVA_COLABORADOR_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Colaborador colaborador = new Colaborador(data.getStringExtra(NovoColaboradorActivity.EXTRA_REPLY));
+            Colaborador colaborador = new Colaborador(
+                    data.getParcelableExtra(NovoColaboradorActivity.EXTRA_REPLY));
             mColaboradorViewModel.insert(colaborador);
         } else {
             Toast.makeText(
@@ -105,5 +109,5 @@ public class MainActivity extends AppCompatActivity {
                     R.string.empty_not_saved,
                     Toast.LENGTH_LONG).show();
         }
-    }*/
+    }
 }
