@@ -1,7 +1,6 @@
 package br.com.domtecpro.roomexemplo;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,10 +12,9 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -66,19 +64,18 @@ public class NovoColaboradorActivity extends AppCompatActivity {
 
         permissoesAcesso();
 
-        final Button button = findViewById(R.id.btnSalvarColab);
+        final AppCompatButton button = findViewById(R.id.btnSalvarColab);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent replyIntent = new Intent();
                 if (TextUtils.isEmpty(edtNome.getText())) {
                     setResult(RESULT_CANCELED, replyIntent);
                 } else {
-
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     byte[] imagemEnviada = stream.toByteArray();
 
-                    Colaborador colaborador = new Colaborador(
+                    /*Colaborador colaborador = new Colaborador(
                             0, edtNome.getText().toString(),
                             edtCargo.getText().toString(),
                             edtCpf.getText().toString(),
@@ -86,11 +83,20 @@ public class NovoColaboradorActivity extends AppCompatActivity {
                             edtEmail.getText().toString(),
                             edtNome.getText()
                                     .toString().toLowerCase().trim()
-                                    + ".jpg", imagemEnviada);
+                                    + ".jpg", imagemEnviada);*/
 
                     //String word = mEditPalavraView.getText().toString();
                     //replyIntent.putExtra(EXTRA_REPLY, word);
-                    replyIntent.putExtra(EXTRA_REPLY, (Parcelable) colaborador);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("nome", edtNome.getText().toString());
+                    bundle.putString("cargo", edtCargo.getText().toString());
+                    bundle.putString("cpf", edtCpf.getText().toString());
+                    bundle.putString("endereco", edtEndereco.getText().toString());
+                    bundle.putString("email", edtEmail.getText().toString());
+                    bundle.putString("caminhoFoto", edtNome.getText()
+                            .toString().toLowerCase().trim() + ".jpg");
+                    bundle.putByteArray("foto", imagemEnviada);
+                    replyIntent.putExtra(EXTRA_REPLY, bundle);
                     setResult(RESULT_OK, replyIntent);
                 }
                 finish();

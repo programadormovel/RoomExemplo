@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
      * Objeto ViewModel do Colaborador, encarregado da regra de negócio
      */
     private ColaboradorViewModel mColaboradorViewModel;
-    public static final int NOVA_COLABORADOR_ACTIVITY_REQUEST_CODE = 1;
+    private ColaboradorListAdapter adapter;
+    public static final int NOVO_COLABORADOR_ACTIVITY_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
          * Recebe o dados da fonte de dados, e realiza o de-para
          * Colocando cada dado em seu lugar, em cada item carregado da lista
          */
-        final ColaboradorListAdapter adapter = new ColaboradorListAdapter(this);
+        adapter = new ColaboradorListAdapter(this);
         // Liga o Adaptador à lista gerada
         recyclerView.setAdapter(adapter);
         // Define o gerenciador de layout da lista carregada
@@ -68,16 +69,6 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(@Nullable final List<Colaborador> colaboradores) {
                 // Update the cached copy of the Colaboradores in the adapter.
                 adapter.setColaboradores(colaboradores);
-
-                /*
-                InputStream input = null;
-                input = getBaseContext().getResources().openRawResource(R.drawable.iwantyou);
-                byte[] bmp = null;
-                try {
-                    bmp = new byte[input.available()];
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
             }
         });
 
@@ -91,17 +82,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NovoColaboradorActivity.class);
-                startActivityForResult(intent, NOVA_COLABORADOR_ACTIVITY_REQUEST_CODE);
+                startActivityForResult(intent, NOVO_COLABORADOR_ACTIVITY_REQUEST_CODE);
             }
         });
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == NOVA_COLABORADOR_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == NOVO_COLABORADOR_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Bundle bundle = data.getBundleExtra(NovoColaboradorActivity.EXTRA_REPLY);
             Colaborador colaborador = new Colaborador(
-                    data.getParcelableExtra(NovoColaboradorActivity.EXTRA_REPLY));
+                    (adapter.getItemCount() + 1),
+                    bundle.getString("nome"),
+                    bundle.getString("cargo"),
+                    bundle.getString("cpf"),
+                    bundle.getString("endereco"),
+                    bundle.getString("email"),
+                    bundle.getString("caminhoFoto"),
+                    bundle.getByteArray("foto")
+                    );
             mColaboradorViewModel.insert(colaborador);
         } else {
             Toast.makeText(

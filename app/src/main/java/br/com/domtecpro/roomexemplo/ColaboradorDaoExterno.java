@@ -24,7 +24,7 @@ public class ColaboradorDaoExterno {
         try {
             // Objeto de definição da declaração de pesquisa
             PreparedStatement pst = ConexaoExterna.conectar().prepareStatement(
-                    "Select * from Colaborador"
+                    "Select * from Colaborador Order by id ASC"
             );
             // Objeto ResultSet que receberá os dados pesquisados
             ResultSet res = pst.executeQuery();
