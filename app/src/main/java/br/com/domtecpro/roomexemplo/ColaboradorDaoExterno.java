@@ -24,7 +24,7 @@ public class ColaboradorDaoExterno {
         try {
             // Objeto de definição da declaração de pesquisa
             PreparedStatement pst = ConexaoExterna.conectar().prepareStatement(
-                    "Select * from Colaborador Order by id ASC"
+                    "Select * from Colaborador"
             );
             // Objeto ResultSet que receberá os dados pesquisados
             ResultSet res = pst.executeQuery();
@@ -51,5 +51,33 @@ public class ColaboradorDaoExterno {
 
         // retorna dados dos colaboradores para mostrar na tela ou lista
         return lista;
+    }
+
+    /**
+     * Método de inserção do Colaborador cadastrado no banco externo
+     * SQL Server ou outro conectado
+     */
+    public static void inserirColaborador(Colaborador colab){
+        PreparedStatement pst;
+
+        try {
+            pst = ConexaoExterna.conectar().prepareStatement(
+                    "Insert Into Colaborador " +
+                            "(nome, cargo, cpf, endereco, email, caminhoFoto, foto) values " +
+                            "(?,?,?,?,?,?,?)");
+            //pst.setInt(1, colab.getId());
+            pst.setString(1, colab.getNome());
+            pst.setString(2, colab.getCargo());
+            pst.setString(3, colab.getCpf());
+            pst.setString(4, colab.getEndereco());
+            pst.setString(5, colab.getEmail());
+            pst.setString(6, colab.getCaminhoFoto());
+            pst.setBytes(7, colab.getFoto());
+
+            pst.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -58,7 +58,14 @@ class ColaboradorRepository {
         // método de execução paralela (thread)
         ColaboradorRoomDatabase.databaseWriteExecutor.execute(() -> {
             // Este método é chamado pela ViewModel
-            mColaboradorDao.insert(colaborador);
+            try {
+                // Inserindo colaborador no banco local (SQLite via RoomDatabase)
+                mColaboradorDao.insert(colaborador);
+                // Inserindo registro no banco externo
+                ColaboradorDaoExterno.inserirColaborador(colaborador);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 }
