@@ -1,5 +1,7 @@
 package br.com.domtecpro.roomexemplo;
 
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +25,8 @@ public class ColaboradorDaoExterno {
         // Estrutura try/catch para pesquisar dados do colaborador
         try {
             // Objeto de definição da declaração de pesquisa
-            PreparedStatement pst = ConexaoExterna.conectar().prepareStatement(
+            Connection conn = ConexaoExterna.conectar();
+            PreparedStatement pst = conn.prepareStatement(
                     "Select * from Colaborador"
             );
             // Objeto ResultSet que receberá os dados pesquisados
@@ -42,7 +45,10 @@ public class ColaboradorDaoExterno {
                         res.getString(5), //endereço
                         res.getString(6), //email
                         res.getString(7), //nome da foto
-                        res.getBytes(8) //foto
+                        // SQL Server (varbinary)
+                        // res.getBytes(8) //foto
+                        // MySql (blob)
+                        res.getBlob(8).getBytes(0, (int) res.getBlob(8).length()) //foto
                         ));
             }
         } catch (SQLException e) {
